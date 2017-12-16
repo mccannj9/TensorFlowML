@@ -89,25 +89,8 @@ def main():
     data_dir = os.path.dirname(os.path.abspath(__file__)) + "/data/"
 
     # features_path = data_dir + "Xtrain.txt"
-    # labels_path = data_dir + "Ytrain_zeros.txt"
-    # Xdata = np.loadtxt(features_path)
-    # ydata = np.loadtxt(labels_path)
-    # ydata = ydata.reshape(-1,1)
-    #
-    # tf_gradient_wvector = tensorflow_solution_gradient_descent(
-    #     Xdata, ydata, diff="automatic"
-    # )
-    #
-    # tf_gradient_wvector = tensorflow_solution_gradient_descent(
-    #     Xdata, ydata, diff="closed-form"
-    # )
-
-    # Some additional test data from Coursera course on LogReg
-    features_path = "/media/jamc/Sticky/ML_Assignments/machine-learning-ex2/ex2/ex2data1_X.txt"
-    # features_path = "/media/jamc/Sticky/ML_Assignments/machine-learning-ex1/week3_functions/data_X.txt"
-    labels_path = "/media/jamc/Sticky/ML_Assignments/machine-learning-ex2/ex2/ex2data1_y.txt"
-    # labels_path = "/media/jamc/Sticky/ML_Assignments/machine-learning-ex1/week3_functions/data_y_negs.txt"
-    #
+    features_path = "/media/jamc/Sticky/MachineLearning/DeepLearning/data/Xtrain.txt"
+    labels_path = "/media/jamc/Sticky/MachineLearning/DeepLearning/data/Ytrain_zeros.txt"
     Xdata = np.loadtxt(features_path)
     ydata = np.loadtxt(labels_path)
     ydata = ydata.reshape(-1,1)
@@ -115,6 +98,24 @@ def main():
     tf_gradient_wvector = tensorflow_solution_gradient_descent(
         Xdata, ydata, diff="automatic"
     )
+    #
+    # tf_gradient_wvector = tensorflow_solution_gradient_descent(
+    #     Xdata, ydata, diff="closed-form"
+    # )
+
+    # # Some additional test data from Coursera course on LogReg
+    # features_path = "/media/jamc/Sticky/ML_Assignments/machine-learning-ex2/ex2/ex2data1_X.txt"
+    # # features_path = "/media/jamc/Sticky/ML_Assignments/machine-learning-ex1/week3_functions/data_X.txt"
+    # labels_path = "/media/jamc/Sticky/ML_Assignments/machine-learning-ex2/ex2/ex2data1_y.txt"
+    # # labels_path = "/media/jamc/Sticky/ML_Assignments/machine-learning-ex1/week3_functions/data_y_negs.txt"
+    # #
+    # Xdata = np.loadtxt(features_path)
+    # ydata = np.loadtxt(labels_path)
+    # ydata = ydata.reshape(-1,1)
+    #
+    # tf_gradient_wvector = tensorflow_solution_gradient_descent(
+    #     Xdata, ydata, diff="automatic"
+    # )
 
     # tf_gradient_wvector = tensorflow_solution_gradient_descent(
     #     Xdata, ydata, diff="closed-form"
