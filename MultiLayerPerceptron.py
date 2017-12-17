@@ -44,7 +44,7 @@ def tensorflow_perceptron(Xdata, ydata, diff="automatic"):
 
     X = tf.placeholder(dtype=tf.float64, name="X")
     y = tf.placeholder(dtype=tf.float64, name="y")
-    alpha = tf.constant(0.01, dtype=tf.float64, name="alpha")
+    alpha = tf.constant(1, dtype=tf.float64, name="alpha")
 
     with tf.name_scope("DNN"):
         hidden_layer = neural_layer(
@@ -67,7 +67,7 @@ def tensorflow_perceptron(Xdata, ydata, diff="automatic"):
         reg = (alpha) * (part1_reg + part2_reg)
         J = mean_cost + reg
 
-    learn_rate = 0.1
+    learn_rate = 0.01
     with tf.name_scope("Training"):
         # optimizer = tf.train.GradientDescentOptimizer(learn_rate)
         optimizer = tf.train.AdamOptimizer(learn_rate)
@@ -82,7 +82,7 @@ def tensorflow_perceptron(Xdata, ydata, diff="automatic"):
         preds = tf.argmax(z3, axis=1)
         labels = tf.argmax(y, axis=1)
         correct = tf.cast(tf.equal(preds, labels), tf.int64)
-        accuracy = tf.reduce_sum(correct)/tf.shape(X, out_type=tf.int64)[0]
+        accuracy = tf.constant(100, dtype=tf.int64)*tf.reduce_sum(correct)/tf.shape(X, out_type=tf.int64)[0]
 
     init = tf.global_variables_initializer()
     saver = tf.train.Saver()
@@ -95,8 +95,8 @@ def tensorflow_perceptron(Xdata, ydata, diff="automatic"):
         for epoch in range(nepochs):
             for iter in range(Xt.shape[0] // batch_size):
                 Batch = np.random.permutation(Xt.shape[0])[:batch_size]
-                Xbatch, ybatch = Xt[Batch], yt[Batch]
-                # Xbatch, ybatch = Xt, yt
+                # Xbatch, ybatch = Xt[Batch], yt[Batch]
+                Xbatch, ybatch = Xt, yt
                 sesh.run(training_op, feed_dict={X:Xbatch, y:ybatch})
             cost_train = J.eval(feed_dict={X:Xt, y:yt})
             cost_test = J.eval(feed_dict={X:Xv, y:yv})
