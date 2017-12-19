@@ -57,10 +57,7 @@ docs/_build/
 # PyBuilder
 target/
 
-checkpoint
+# tensorflow saves
+checkpoints/*
+tflow_logs/*
 
-*.data-00000-of-00001
-
-my_model_final\.ckpt\.index
-
-my_model_final\.ckpt\.meta

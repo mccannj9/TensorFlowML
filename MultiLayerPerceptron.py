@@ -28,6 +28,7 @@ def neural_layer(X, ninput, nneuron, name, activation=None):
 def tensorflow_perceptron(Xdata, ydata, diff="automatic"):
 
     # from tensorflow import tensorflow.nn.sigmoid as sigmoid
+    from datetime import datetime
 
     input_layer_size = Xdata.shape[1] # should be 400
     hidden_layer_size = 25
@@ -44,7 +45,7 @@ def tensorflow_perceptron(Xdata, ydata, diff="automatic"):
 
     X = tf.placeholder(dtype=tf.float64, name="X")
     y = tf.placeholder(dtype=tf.float64, name="y")
-    alpha = tf.constant(1, dtype=tf.float64, name="alpha")
+    alpha = tf.constant(0.1, dtype=tf.float64, name="alpha")
 
     with tf.name_scope("DNN"):
         hidden_layer = neural_layer(
@@ -67,10 +68,10 @@ def tensorflow_perceptron(Xdata, ydata, diff="automatic"):
         reg = (alpha) * (part1_reg + part2_reg)
         J = mean_cost + reg
 
-    learn_rate = 0.01
+    learn_rate = 0.1
     with tf.name_scope("Training"):
-        # optimizer = tf.train.GradientDescentOptimizer(learn_rate)
-        optimizer = tf.train.AdamOptimizer(learn_rate)
+        optimizer = tf.train.GradientDescentOptimizer(learn_rate)
+        # optimizer = tf.train.AdamOptimizer(learn_rate)
         training_op = optimizer.minimize(J)
 
     with tf.name_scope("FeedForward"):
@@ -87,34 +88,49 @@ def tensorflow_perceptron(Xdata, ydata, diff="automatic"):
     init = tf.global_variables_initializer()
     saver = tf.train.Saver()
 
+    now = datetime.utcnow().strftime("%Y-%m-%d-%H-%M-%S")
+    root_logdir = "./tflow_logs"
+    logdir = "%s/run-%s/" % (root_logdir, now)
+
+    graph = tf.get_default_graph()
+
+    cost_summary = tf.summary.scalar('COST', J)
+    graph_output = tf.summary.FileWriter(logdir, graph)
+
+
+    graph.finalize()
+
     nepochs = 4000
     batch_size = 50
 
     with tf.Session() as sesh:
         init.run()
         for epoch in range(nepochs):
-            for iter in range(Xt.shape[0] // batch_size):
+            nbatches = Xt.shape[0] // batch_size
+            for iter in range(nbatches):
                 Batch = np.random.permutation(Xt.shape[0])[:batch_size]
-                # Xbatch, ybatch = Xt[Batch], yt[Batch]
-                Xbatch, ybatch = Xt, yt
+                Xbatch, ybatch = Xt[Batch], yt[Batch]
+                # Xbatch, ybatch = Xt, yt
+
+                if iter % 10 == 0:
+                    summary_str = cost_summary.eval(feed_dict={X:Xbatch, y:ybatch})
+                    step = epoch*nbatches + iter
+                    graph_output.add_summary(summary_str, step)
+
                 sesh.run(training_op, feed_dict={X:Xbatch, y:ybatch})
+
             cost_train = J.eval(feed_dict={X:Xt, y:yt})
             cost_test = J.eval(feed_dict={X:Xv, y:yv})
-            # acc_train = accuracy.eval(feed_dict={X:Xt, y:yt})
-            # acc_test = accuracy.eval(feed_dict={X:Xv, y:yv})
-            # correct_tvals = correct.eval(feed_dict={X:Xt, y:yt})
-            # correct_vvals = correct.eval(feed_dict={X:Xv, y:yv})
             accuracy_tvals = accuracy.eval(feed_dict={X:Xt, y:yt})
             accuracy_vvals = accuracy.eval(feed_dict={X:Xv, y:yv})
 
-            # print("Epoch %s ::: Tacc=%s ::: Vacc=%s" % (epoch, acc_train, acc_test))
             print("Epoch %s ::: J=%s ::: J=%s" % (epoch, cost_train, cost_test))
-            # part1_cost_val = part1_cost.eval(feed_dict={X:Xt, y:yt})
-            # part2_cost_val = part2_cost.eval(feed_dict={X:Xt, y:yt})
-            # print("Epoch %s ::: P1acc=%s ::: P2acc=%s" % (epoch, correct_tvals, correct_vvals))
             print("Epoch %s ::: P1acc=%s ::: P2acc=%s" % (epoch, accuracy_tvals, accuracy_vvals))
 
-        save_path = saver.save(sesh, "./my_model_final.ckpt")
+            if epoch % 1000 == 0:
+                save_path = saver.save(sesh, "./checkpoints/MLP_intermediate.ckpt")
+
+        save_path = saver.save(sesh, "./checkpoints/MLP_final.ckpt")
 
 
 def main():
