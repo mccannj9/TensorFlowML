@@ -25,6 +25,11 @@ def compute_prediction(image, weights):
     return (list(a3), value)
 
 
+def invert_image_color(im):
+    invert = np.zeros(im.shape) + 255 - im
+    return invert
+
+
 def ascii_plot(image_vector, nrows, ncols):
 
     print()
@@ -74,10 +79,11 @@ def plot_and_predict(images_file, labels_file, weights, image_number=1, nrows=28
 
     im = [int(x) for x in im.split()]
     im = np.asarray(im)
+
     ll = ll.rstrip()
 
     output = ascii_plot(im, nrows, ncols)
-    bokeh_plot(im, ll, image_number, nrows, ncols)
+    bokeh_plot(invert_image_color(im), ll, image_number, nrows, ncols)
 
     print("This image is labeled as: %s" % ll)
     probs, label = compute_prediction(im, weights)
