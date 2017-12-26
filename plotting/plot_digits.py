@@ -2,6 +2,7 @@
 
 def ascii_plot(images_file, labels_file, image_number=1, nrows=28, ncols=28):
 
+    print()
     images = open(images_file)
     labels = open(labels_file)
 
@@ -22,6 +23,10 @@ def ascii_plot(images_file, labels_file, image_number=1, nrows=28, ncols=28):
     print("This image is labeled as: %s" % ll)
 
 
+def bokeh_plot(images_file, labels_file, image_number=1, nrows=28, ncols=28):
+    pass
+
+
 def main():
 
     import argparse
@@ -30,6 +35,8 @@ def main():
     parser.add_argument('-i', '--images', type=str, help="images file", required=True)
     parser.add_argument('-l', '--labels', type=str, help="labels file", required=True)
     parser.add_argument('-n', '--image_number', type=int, help="line number of image", required=False, default=1)
+    parser.add_argument('-w', '--weights', type=str, help="weights for predictions", required=False, default=None)
+
 
     args = parser.parse_args()
 
