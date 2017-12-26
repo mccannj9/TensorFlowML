@@ -18,6 +18,8 @@ def convert_mnist_image_to_txt(inf, outf):
         iout = "\t".join(image)
         print(iout, file=outfile)
 
+    bytestream.close()
+
     return 0
 
 
@@ -33,6 +35,8 @@ def convert_mnist_label_to_txt(inf, outf):
         blabel = bytestream.read(1)
         label = int.from_bytes(blabel, byteorder="big")
         print(label, file=outfile)
+
+    bytestream.close()
 
     return 0
 
