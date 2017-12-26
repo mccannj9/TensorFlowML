@@ -4,7 +4,6 @@ import numpy as np
 
 
 def compute_prediction(image, weights):
-    import numpy as np
 
     if weights == None:
         return 0
