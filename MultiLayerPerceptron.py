@@ -100,7 +100,7 @@ def tensorflow_perceptron(Xdata, ydata, diff="automatic"):
 
     graph.finalize()
 
-    nepochs = 4000
+    nepochs = 1000
     batch_size = 1500
 
     with tf.Session() as sesh:
@@ -121,14 +121,35 @@ def tensorflow_perceptron(Xdata, ydata, diff="automatic"):
 
             cost_train = J.eval(feed_dict={X:Xt, y:yt})
             cost_test = J.eval(feed_dict={X:Xv, y:yv})
-            accuracy_tvals = accuracy.eval(feed_dict={X:Xt, y:yt})
-            accuracy_vvals = accuracy.eval(feed_dict={X:Xv, y:yv})
+            # accuracy_tvals = accuracy.eval(feed_dict={X:Xt, y:yt})
+            # accuracy_vvals = accuracy.eval(feed_dict={X:Xv, y:yv})
 
             print("Epoch %s ::: J=%s ::: J=%s" % (epoch, cost_train, cost_test))
-            print("Epoch %s ::: P1acc=%s ::: P2acc=%s" % (epoch, accuracy_tvals, accuracy_vvals))
+            # print("Epoch %s ::: P1acc=%s ::: P2acc=%s" % (epoch, accuracy_tvals, accuracy_vvals))
+
 
             if epoch % 1000 == 0:
                 save_path = saver.save(sesh, "./checkpoints/MLP_intermediate.ckpt")
+
+
+        weights0 = sesh.run(W1)
+        weights1 = sesh.run(W2)
+        bias1 = sesh.run(b1)
+        bias2 = sesh.run(b2)
+
+        outputs = [weights0, weights1, bias1, bias2]
+        prefix = [
+            "DNN_hidden_kernel", "DNN_predictions_kernel",
+            "DNN_hidden_bias", "DNN_predictions_bias"
+        ]
+
+        zipper = zip(outputs, prefix)
+
+        print(logdir)
+        for x,y in zipper:
+            fout = "%s/%s.txt" % (logdir, y)
+            np.savetxt(fname=fout, X=x, delimiter="\t")
+
 
         save_path = saver.save(sesh, "./checkpoints/MLP_final.ckpt")
 
@@ -137,10 +158,11 @@ def main():
 
     # features_path = "/media/jamc/Sticky/MachineLearning/ML_Assignments/machine-learning-ex4/ex4/Xdata.txt"
     # labels_path = "/media/jamc/Sticky/MachineLearning/ML_Assignments/machine-learning-ex4/ex4/ydata_zeros.txt"
-    features_path = "/mnt/Data/GitHub/TensorFlowML/data/mnist_train_pixels.txt"
-    labels_path = "/mnt/Data/GitHub/TensorFlowML/data/mnist_train_labels.txt"
+    features_path = "/mnt/Data/GitHub/TensorFlowML/data/MNIST_training_images.txt"
+    labels_path = "/mnt/Data/GitHub/TensorFlowML/data/MNIST_training_labels.txt"
     # 5000 x 400
     Xdata = np.loadtxt(features_path)
+    Xdata *= 1/255
     # 5000 x 1
     ydata = np.loadtxt(labels_path)
 
