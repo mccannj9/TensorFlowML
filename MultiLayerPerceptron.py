@@ -31,7 +31,7 @@ def tensorflow_perceptron(Xdata, ydata, diff="automatic"):
     from datetime import datetime
 
     input_layer_size = Xdata.shape[1] # should be 400
-    hidden_layer_size = 25
+    hidden_layer_size = 50
     num_labels = ydata.shape[1] # should be 10
 
     # half examples for training
@@ -101,7 +101,7 @@ def tensorflow_perceptron(Xdata, ydata, diff="automatic"):
     graph.finalize()
 
     nepochs = 4000
-    batch_size = 50
+    batch_size = 1500
 
     with tf.Session() as sesh:
         init.run()
@@ -135,8 +135,10 @@ def tensorflow_perceptron(Xdata, ydata, diff="automatic"):
 
 def main():
 
-    features_path = "/media/jamc/Sticky/MachineLearning/ML_Assignments/machine-learning-ex4/ex4/Xdata.txt"
-    labels_path = "/media/jamc/Sticky/MachineLearning/ML_Assignments/machine-learning-ex4/ex4/ydata_zeros.txt"
+    # features_path = "/media/jamc/Sticky/MachineLearning/ML_Assignments/machine-learning-ex4/ex4/Xdata.txt"
+    # labels_path = "/media/jamc/Sticky/MachineLearning/ML_Assignments/machine-learning-ex4/ex4/ydata_zeros.txt"
+    features_path = "/mnt/Data/GitHub/TensorFlowML/data/mnist_train_pixels.txt"
+    labels_path = "/mnt/Data/GitHub/TensorFlowML/data/mnist_train_labels.txt"
     # 5000 x 400
     Xdata = np.loadtxt(features_path)
     # 5000 x 1

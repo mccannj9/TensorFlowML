@@ -61,3 +61,6 @@ target/
 checkpoints/*
 tflow_logs/*
 
+data/*.gz
+data/*.csv
+data/*.txt
