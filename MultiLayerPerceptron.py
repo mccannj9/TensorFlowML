@@ -109,8 +109,8 @@ def tensorflow_perceptron(Xdata, ydata, diff="automatic"):
             nbatches = Xt.shape[0] // batch_size
             for iter in range(nbatches):
                 Batch = np.random.permutation(Xt.shape[0])[:batch_size]
-                Xbatch, ybatch = Xt[Batch], yt[Batch]
-                # Xbatch, ybatch = Xt, yt
+                # Xbatch, ybatch = Xt[Batch], yt[Batch]
+                Xbatch, ybatch = Xt, yt
 
                 if iter % 10 == 0:
                     summary_str = cost_summary.eval(feed_dict={X:Xbatch, y:ybatch})
